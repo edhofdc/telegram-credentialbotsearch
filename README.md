@@ -88,7 +88,7 @@ MAX_CONCURRENT_SCANS=3
 - `/help` - Display available commands and usage
 - `/scan <URL>` - Scan website for credentials and endpoints
 - `/status` - Show bot status and active scans
-- `/report <URL>` - Generate PDF security report
+- `/reportpdf <URL>` - Generate PDF security report
 
 ### Private Chat Commands
 - `/enter <group_url>` - Set target group (Admin only)
