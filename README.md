@@ -34,12 +34,30 @@ This project follows MVP (Model-View-Presenter) pattern with clear separation of
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.9+
-- Telegram Bot Token
-- Virtual environment (recommended)
+### Using Docker (Recommended)
 
-### Installation
+```bash
+# Clone the repository
+git clone <repository-url>
+cd telegram-recon-bot
+
+# Copy environment file
+cp .env.example .env
+
+# Edit .env with your bot token and settings
+nano .env
+
+# Fix permissions (if needed)
+./fix-permissions.sh
+
+# Start with Docker Compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+### Manual Installation
 
 1. **Clone and setup**:
    ```bash
@@ -100,6 +118,27 @@ MAX_CONCURRENT_SCANS=3
 /scan https://example.com  # Full URL
 /report https://target.com # Generate PDF report
 ```
+
+## 🔧 Troubleshooting
+
+### Permission Denied Error
+If you encounter `[Errno 13] Permission denied` when generating PDF reports:
+
+```bash
+# Quick fix
+./fix-permissions.sh
+
+# Manual fix
+mkdir -p reports logs
+sudo chown -R 1000:1000 reports logs
+chmod -R 755 reports logs
+docker-compose down && docker-compose up -d
+```
+
+### Other Issues
+- **Bot not responding**: Check logs with `docker-compose logs -f`
+- **Memory issues**: Increase Docker memory limits
+- **Network issues**: Verify bot token and internet connection
 
 ## 📊 Detection Capabilities
 

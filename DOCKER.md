@@ -203,13 +203,43 @@ docker-compose logs --tail=50
 docker-compose restart
 ```
 
-#### Permission Issues
+#### Permission Issues for PDF Reports
 
+**Problem:** `[Errno 13] Permission denied: '/app/reports/recon_report_*.pdf'`
+
+**Solutions:**
+
+a) **Fix host directory permissions:**
 ```bash
-# Fix volume permissions
-sudo chown -R 1000:1000 ./logs ./reports
+# Create directories if they don't exist
+mkdir -p reports logs
 
-# Or recreate with correct permissions
+# Set proper permissions
+chmod 755 reports logs
+sudo chown -R 1000:1000 reports logs
+```
+
+b) **Alternative: Use named volumes:**
+```yaml
+# In docker-compose.yml, replace volume mapping:
+volumes:
+  - reports-data:/app/reports
+  - logs-data:/app/logs
+
+# Add at the end of file:
+volumes:
+  reports-data:
+  logs-data:
+```
+
+c) **Run container with current user:**
+```bash
+# Add to docker-compose.yml service:
+user: "${UID:-1000}:${GID:-1000}"
+```
+
+d) **Or recreate with correct permissions:**
+```bash
 docker-compose down
 docker-compose up -d
 ```

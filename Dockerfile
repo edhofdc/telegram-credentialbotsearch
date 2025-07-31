@@ -29,12 +29,14 @@ COPY models/ ./models/
 COPY services/ ./services/
 COPY presenters/ ./presenters/
 
-# Create directories for reports and logs
-RUN mkdir -p /app/reports /app/logs
-
 # Create non-root user for security
-RUN useradd -m -u 1000 botuser \
-    && chown -R botuser:botuser /app
+RUN useradd -m -u 1000 botuser
+
+# Create directories for reports and logs with proper ownership
+RUN mkdir -p /app/reports /app/logs \
+    && chown -R botuser:botuser /app \
+    && chmod -R 755 /app/reports /app/logs
+
 USER botuser
 
 # Health check
