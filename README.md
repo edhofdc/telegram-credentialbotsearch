@@ -98,7 +98,7 @@ MAX_CONCURRENT_SCANS=3
 ```
 /scan example.com          # Auto-adds https://
 /scan https://example.com  # Full URL
-/report https://target.com # Generate PDF report
+/reportpdf https://target.com # Generate PDF report
 ```
 
 ## 📊 Detection Capabilities
