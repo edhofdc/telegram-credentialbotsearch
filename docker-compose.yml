@@ -1,0 +1,57 @@
+# Docker Compose for Telegram Recon Bot - Python Version
+version: '3.8'
+
+services:
+  telegram-recon-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: telegram-recon-bot
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - ADMIN_CHAT_ID=${ADMIN_CHAT_ID}
+      - TARGET_TOPIC_ID=${TARGET_TOPIC_ID}
+      - MAX_FILE_SIZE=${MAX_FILE_SIZE:-5242880}
+      - REQUEST_TIMEOUT=${REQUEST_TIMEOUT:-30}
+      - MAX_CONCURRENT_SCANS=${MAX_CONCURRENT_SCANS:-3}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    env_file:
+      - .env
+    volumes:
+      - ./reports:/app/reports
+      - ./logs:/app/logs
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('https://api.telegram.org', timeout=5)"]
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  bot-network:
+    driver: bridge
+    name: telegram-recon-network
+
+volumes:
+  logs:
+    driver: local
+    name: telegram-recon-logs
+  reports:
+    driver: local
+    name: telegram-recon-reports
